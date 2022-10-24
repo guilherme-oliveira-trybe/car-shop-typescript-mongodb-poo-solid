@@ -5,9 +5,9 @@ import { NextFunction, Request, Response } from 'express';
 import CarModel from '../../../models/Car';
 import CarService from '../../../services/Car';
 import CarController from '../../../controllers/Car';
-import { carMock, carMockWithId } from '../../mocks/carMocks';
+import { carMock, carMockWithId, allCarsMock } from '../../mocks/carMocks';
 
-describe('Car Model', () => {
+describe('Car Controller', () => {
   const carModel = new CarModel();
   const carService = new CarService(carModel);
   const carController = new CarController(carService);
@@ -16,6 +16,8 @@ describe('Car Model', () => {
 
   before(async () => {
     sinon.stub(carService, 'create').resolves(carMock);
+    sinon.stub(carService, 'read').onCall(0).resolves(allCarsMock).onCall(1).resolves([]);
+    sinon.stub(carService, 'readOne').resolves(carMockWithId);
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
@@ -34,5 +36,31 @@ describe('Car Model', () => {
       expect((res.json as sinon.SinonStub).calledWith(carMock)).to.be.true;
     });
   });
+
+  describe('searching all cars', () => {
+    it('successfully found', async () => {
+      await carController.read(req, res);
+
+      expect((res.status as sinon.SinonStub).calledWith(201)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(allCarsMock)).to.be.true;
+    })
+
+    it('if dont have cars, returns an empty list', async () => {
+      await carController.read(req, res);
+
+      expect((res.status as sinon.SinonStub).calledWith(201)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith([])).to.be.true;
+    })
+  })
+
+  describe('searching a car', () => {
+    it('successfully found', async () => {
+      req.params = { id: carMockWithId._id };
+      await carController.readOne(req, res)
+
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(carMockWithId)).to.be.true;
+    })
+  })
 
 });
