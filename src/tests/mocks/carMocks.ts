@@ -75,4 +75,15 @@ const changedCarMockWithId: ICar & { _id: string } = {
   seatsQty: 5,
 }
 
-export { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId };
+const deleteCarMockWithId: ICar & { _id: string } = {
+  _id: '62cf1fc6498565d94eba52cd',
+  model: 'Doblo',
+  year: 2012,
+  color: 'Ligth Gray',
+  status: true,
+  buyValue: 8000,
+  doorsQty: 2,
+  seatsQty: 5,
+}
+
+export { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId, deleteCarMockWithId };
