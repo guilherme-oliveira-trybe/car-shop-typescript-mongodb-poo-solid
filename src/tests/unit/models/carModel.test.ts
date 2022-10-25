@@ -3,7 +3,7 @@ import chai from 'chai';
 const { expect } = chai;
 import { Model } from 'mongoose';
 import CarModel from '../../../models/Car';
-import { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId } from '../../mocks/carMocks';
+import { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId, deleteCarMockWithId } from '../../mocks/carMocks';
 import { ErrorTypes } from '../../../errors/catalog';
 
 describe('Car Model', () => {
@@ -14,6 +14,7 @@ describe('Car Model', () => {
     sinon.stub(Model, 'find').onCall(0).resolves(allCarsMock).onCall(1).resolves([]);
     sinon.stub(Model, 'findOne').resolves(carMockWithId);
     sinon.stub(Model, 'findByIdAndUpdate').resolves(changedCarMockWithId);
+    sinon.stub(Model, 'findByIdAndDelete').resolves(deleteCarMockWithId);
   });
 
   after(()=>{
@@ -71,6 +72,25 @@ describe('Car Model', () => {
       let error;
       try {
         await carModel.update('123ERRADO', changeCarMock);
+      } catch (err: any) {
+        error = err.message
+      }
+
+      expect(error).to.be.deep.equal(ErrorTypes.InvalidMongoId);
+    })
+  })
+
+  describe('delete a car', () => {
+    it('successfully delete', async () => {
+      const carDeleted = await carModel.delete(deleteCarMockWithId._id);
+
+      expect(carDeleted).to.be.deep.equal(deleteCarMockWithId);
+    })
+
+    it('_id invalid', async () => {
+      let error;
+      try {
+        await carModel.delete('123ERRADO');
       } catch (err: any) {
         error = err.message
       }
