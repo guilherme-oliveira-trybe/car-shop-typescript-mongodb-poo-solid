@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 import CarModel from '../../../models/Car';
 import CarService from '../../../services/Car';
 import CarController from '../../../controllers/Car';
-import { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId } from '../../mocks/carMocks';
+import { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId, deleteCarMockWithId } from '../../mocks/carMocks';
 
 describe('Car Controller', () => {
   const carModel = new CarModel();
@@ -19,9 +19,11 @@ describe('Car Controller', () => {
     sinon.stub(carService, 'read').onCall(0).resolves(allCarsMock).onCall(1).resolves([]);
     sinon.stub(carService, 'readOne').resolves(carMockWithId);
     sinon.stub(carService, 'update').resolves(changedCarMockWithId);
+    sinon.stub(carService, 'delete').resolves(deleteCarMockWithId);
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
+    res.end = sinon.stub().returns(res);
   });
 
   after(()=>{
@@ -72,6 +74,16 @@ describe('Car Controller', () => {
 
       expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
       expect((res.json as sinon.SinonStub).calledWith(changedCarMockWithId)).to.be.true;
+    })
+  })
+
+  describe('delete a car', () => {
+    it('successfully delete', async () => {
+      req.params = { id: deleteCarMockWithId._id };
+      await carController.delete(req, res);
+
+      expect((res.status as sinon.SinonStub).calledWith(204)).to.be.true;
+      expect((res.end as sinon.SinonStub).calledWith()).to.be.true;
     })
   })
 
