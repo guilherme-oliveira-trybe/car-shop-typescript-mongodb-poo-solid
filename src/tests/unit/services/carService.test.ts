@@ -46,7 +46,7 @@ describe('Car Service', () => {
     it('successfully found', async () => {
       const allCarsFound = await carService.read();
 
-      expect(allCarsFound).to.be.deep.equal(allCarsFound);
+      expect(allCarsFound).to.be.deep.equal(allCarsMock);
     })
 
     it('if dont have cars, returns an empty list', async () => {
