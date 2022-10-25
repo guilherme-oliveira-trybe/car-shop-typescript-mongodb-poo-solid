@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 import CarModel from '../../../models/Car';
 import CarService from '../../../services/Car';
 import CarController from '../../../controllers/Car';
-import { carMock, carMockWithId, allCarsMock } from '../../mocks/carMocks';
+import { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId } from '../../mocks/carMocks';
 
 describe('Car Controller', () => {
   const carModel = new CarModel();
@@ -18,6 +18,7 @@ describe('Car Controller', () => {
     sinon.stub(carService, 'create').resolves(carMock);
     sinon.stub(carService, 'read').onCall(0).resolves(allCarsMock).onCall(1).resolves([]);
     sinon.stub(carService, 'readOne').resolves(carMockWithId);
+    sinon.stub(carService, 'update').resolves(changedCarMockWithId);
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
@@ -60,6 +61,17 @@ describe('Car Controller', () => {
 
       expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
       expect((res.json as sinon.SinonStub).calledWith(carMockWithId)).to.be.true;
+    })
+  })
+
+  describe('changing a car', () => {
+    it('successfully changed', async () => {
+      req.body = changeCarMock;
+      req.params = { id: changedCarMockWithId._id };
+      await carController.update(req, res);
+
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(changedCarMockWithId)).to.be.true;
     })
   })
 
