@@ -4,7 +4,7 @@ const { expect } = chai;
 import { Model } from 'mongoose';
 import CarModel from '../../../models/Car';
 import CarService from '../../../services/Car';
-import { carMock, carMockWithId, allCarsMock, changedCarMockWithId, changeCarMock } from '../../mocks/carMocks';
+import { carMock, carMockWithId, allCarsMock, changedCarMockWithId, changeCarMock, deleteCarMockWithId } from '../../mocks/carMocks';
 import { ZodError } from 'zod';
 import { ErrorTypes } from '../../../errors/catalog';
 
@@ -17,6 +17,7 @@ describe('Car Service', () => {
     sinon.stub(Model, 'find').onCall(0).resolves(allCarsMock).onCall(1).resolves([]);
     sinon.stub(Model, 'findOne').onCall(0).resolves(carMockWithId).onCall(1).resolves(null);
     sinon.stub(Model, 'findByIdAndUpdate').onCall(0).resolves(changedCarMockWithId).onCall(1).resolves(null);
+    sinon.stub(Model, 'findByIdAndDelete').onCall(0).resolves(deleteCarMockWithId).onCall(1).resolves(null);
   });
 
   after(()=>{
@@ -104,4 +105,22 @@ describe('Car Service', () => {
     })
   })
 
+  describe('delete a car', () => {
+    it('successfully delete', async () => {
+      const carDeleted = await carService.delete(deleteCarMockWithId._id);
+
+      expect(carDeleted).to.be.deep.equal(deleteCarMockWithId);
+    })
+
+    it('_id not found', async () => {
+      let error;
+      try {
+        await carService.delete(changedCarMockWithId._id);
+      } catch (err: any) {
+        error = err.message
+      }
+
+      expect(error).to.be.deep.equal(ErrorTypes.EntityNotFound);
+    })
+  })
 });
