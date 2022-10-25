@@ -24,9 +24,9 @@ const carMockWithId: ICar & { _id: string } = {
 const allCarsMock: ICar[] & { _id: string }[] = [
   {
     _id: '62cf1fc6498565d94eba52cd',
-    model: 'Chevrolet',
+    model: 'Celta',
     year: 2015,
-    color: 'Prata',
+    color: 'Silver',
     status: true,
     buyValue: 30000,
     doorsQty: 2,
@@ -34,9 +34,9 @@ const allCarsMock: ICar[] & { _id: string }[] = [
   },
   {
     _id: '73cf1fc6498565d94eba52cd',
-    model: 'Chevrolet',
+    model: 'Ônix',
     year: 2019,
-    color: 'Ônix',
+    color: 'gray',
     status: true,
     buyValue: 45000,
     doorsQty: 2,
@@ -46,7 +46,7 @@ const allCarsMock: ICar[] & { _id: string }[] = [
     _id: '84cf1fc6498565d94eba52cd',
     model: 'Prisma',
     year: 2016,
-    color: 'Prata',
+    color: 'Red',
     status: true,
     buyValue: 35000,
     doorsQty: 2,
@@ -54,4 +54,25 @@ const allCarsMock: ICar[] & { _id: string }[] = [
   },
 ];
 
-export { carMock, carMockWithId, allCarsMock };
+const changeCarMock: ICar = {
+  model: 'Peugeot',
+  year: 2012,
+  color: 'Dark Gray',
+  status: true,
+  buyValue: 15000,
+  doorsQty: 2,
+  seatsQty: 5,
+}
+
+const changedCarMockWithId: ICar & { _id: string } = {
+  _id: '62cf1fc6498565d94eba52cd',
+  model: 'Peugeot',
+  year: 2012,
+  color: 'Dark Gray',
+  status: true,
+  buyValue: 15000,
+  doorsQty: 2,
+  seatsQty: 5,
+}
+
+export { carMock, carMockWithId, allCarsMock, changeCarMock, changedCarMockWithId };
