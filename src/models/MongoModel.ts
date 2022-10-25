@@ -24,7 +24,7 @@ abstract class MongoModel<T> implements IModel<T> {
 
   public async update(_id: string, obj: T): Promise<T | null> {
     if (!isValidObjectId(_id)) throw new Error(ErrorTypes.InvalidMongoId);
-    return this._model.findOneAndUpdate(
+    return this._model.findByIdAndUpdate(
       { _id },
       { ...obj } as UpdateQuery<T>,
       { new: true },
